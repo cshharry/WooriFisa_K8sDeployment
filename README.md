@@ -11,6 +11,43 @@ Minikube를 사용하여 SpringApp을 데이터베이스 연동 없이 Kubernete
 
 ---
 
+## 📑 구성 아키텍처
+
+아래 다이어그램은 Kubernetes 클러스터 내에서 **SpringApp**이 어떻게 배포되고 서비스되는지를 보여줍니다:
+
+```bash
+from diagrams import Cluster, Diagram
+from diagrams.k8s.compute import Pod, Deployment, ReplicaSet
+from diagrams.k8s.network import Service
+from diagrams.onprem.client import Users
+from diagrams.aws.network import ELB
+
+with Diagram("SpringApp Kubernetes Architecture", show=False, direction="LR"):
+    user = Users("User")
+
+    with Cluster("Kubernetes Cluster"):
+        lb_service = Service("springapp-service
+(LoadBalancer)")
+
+        with Cluster("SpringApp Deployment"):
+            deploy = Deployment("springapp-deployment")
+
+            with Cluster("ReplicaSet"):
+                replica_set = ReplicaSet("springapp-replicaset")
+                pods = [Pod("springapp-deployment-pod1"),
+                        Pod("springapp-deployment-pod2"),
+                        Pod("springapp-deployment-pod3")]
+
+        user >> lb_service >> replica_set >> pods
+```
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6e7165f6-9e8f-4105-b3be-b9494dbf25e2" width="400"/>
+</p>
+
+
+
+
 ## 🚀 1. Docker 이미지 빌드
 
 1. **Dockerfile 작성**
